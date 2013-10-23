@@ -27,6 +27,16 @@ class Server:
             print "Could not open socket: " + message
             sys.exit(1)
 
+    #Return new socket connection
+    def open_connection(self,host,port):
+        self.host = host
+        self.port = port
+        self.open_socket()
+
+    # Formats messages returned from our server
+    def format_message(self, fromuser, data):
+        return "[" + fromuser + "] " + data + "\n"
+
     # Handle a new incomming client connection
     def process_new_client(self):
         print "Incoming Connection"
@@ -79,7 +89,7 @@ class Server:
                 # Only send a message if the user has "logged in" (we have a username)
                 if c.screenname:
                     if fromuser:
-                        c.send("::".join([fromuser, data]) + "\n")
+                        c.send(self.format_message(fromuser, data))
                     else:
                         c.send(data + "\n")
             elif c == sys.stdin:
